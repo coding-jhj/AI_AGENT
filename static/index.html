@@ -400,15 +400,6 @@
   const API_BASE = window.location.origin; // FastAPI 서버 주소 (같은 서버)
 
 
-  const savedKey = localStorage.getItem('groq_api_key');
-  if (savedKey) { keyInput.value = savedKey; keyInput.dispatchEvent(new Event('input')); }
-  const savedModel = localStorage.getItem('groq_model');
-  if (savedModel) { document.getElementById('model-select').value = savedModel; }
-  keyInput.addEventListener('change', () => { localStorage.setItem('groq_api_key', keyInput.value.trim()); });
-  document.getElementById('model-select').addEventListener('change', () => {
-    localStorage.setItem('groq_model', document.getElementById('model-select').value);
-  });
-
   let history = [];
   let isLoading = false;
 
@@ -417,6 +408,16 @@
   const keyStatus  = document.getElementById('key-status');
   const statusDot  = document.getElementById('status-dot');
   const sendBtn    = document.getElementById('send-btn');
+
+
+  keyInput.addEventListener('change', () => { localStorage.setItem('groq_api_key', keyInput.value.trim()); });
+  document.getElementById('model-select').addEventListener('change', () => {
+    localStorage.setItem('groq_model', document.getElementById('model-select').value);
+  });
+  const savedKey = localStorage.getItem('groq_api_key');
+  if (savedKey) { keyInput.value = savedKey; keyInput.dispatchEvent(new Event('input')); }
+  const savedModel = localStorage.getItem('groq_model');
+  if (savedModel) { document.getElementById('model-select').value = savedModel; }
 
   keyInput.addEventListener('input', () => {
     const val = keyInput.value.trim();
