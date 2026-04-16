@@ -460,15 +460,15 @@
   <div class="divider"></div>
 
   <div>
-    <div class="section-label">Groq API Key</div>
+    <div class="section-label">Google AI Studio API Key</div>
     <div class="key-guide">
-      <span class="step-num">1</span> <a href="https://console.groq.com" target="_blank">console.groq.com</a> 접속<br>
-      <span class="step-num">2</span> 구글 계정으로 무료 가입<br>
-      <span class="step-num">3</span> API Keys → Create API Key<br>
+      <span class="step-num">1</span> <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> 접속<br>
+      <span class="step-num">2</span> 구글 계정으로 무료 로그인<br>
+      <span class="step-num">3</span> Get API Key → Create API Key<br>
       <span class="step-num">4</span> 아래에 붙여넣기
     </div>
     <div class="input-wrap">
-      <input type="password" id="api-key" placeholder="gsk_..." autocomplete="off" />
+      <input type="password" id="api-key" placeholder="AIza..." autocomplete="off" />
       <div id="key-status"></div>
     </div>
   </div>
@@ -546,18 +546,18 @@
   const statusDot = document.getElementById('status-dot');
   const sendBtn   = document.getElementById('send-btn');
 
-  keyInput.addEventListener('change', () => { localStorage.setItem('groq_api_key', keyInput.value.trim()); });
+  keyInput.addEventListener('change', () => { localStorage.setItem('google_api_key', keyInput.value.trim()); });
   document.getElementById('model-select').addEventListener('change', () => {
-    localStorage.setItem('groq_model', document.getElementById('model-select').value);
+    localStorage.setItem('google_model', document.getElementById('model-select').value);
   });
-  const savedKey = localStorage.getItem('groq_api_key');
+  const savedKey = localStorage.getItem('google_api_key');
   if (savedKey) { keyInput.value = savedKey; keyInput.dispatchEvent(new Event('input')); }
-  const savedModel = localStorage.getItem('groq_model');
+  const savedModel = localStorage.getItem('google_model');
   if (savedModel) { document.getElementById('model-select').value = savedModel; }
 
   function updateKeyStatus() {
     const val = keyInput.value.trim();
-    if (val.startsWith('gsk_') && val.length > 20) {
+    if (val.startsWith('AIza') && val.length > 20) {
       keyStatus.className = 'ok';
       statusDot.className = 'status-dot active';
       sendBtn.disabled = false;
