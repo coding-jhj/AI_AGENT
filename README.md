@@ -1,6 +1,10 @@
 ---
-   sdk: docker
-   app_port: 7860
+title: AI Search Agent
+emoji: 🤖
+colorFrom: green
+colorTo: blue
+sdk: docker
+app_port: 7860
 ---
 
 # 🤖 AI Search Agent — FastAPI 버전
