@@ -33,7 +33,7 @@ app.add_middleware(
 
 
 
-def get_or_create_agent(api_key: str, model: str = "llama-3.1-8b-instant"):
+def get_or_create_agent(api_key: str, model: str = "gemini-2.0-flash"):
     return create_agent(api_key, model)
 
 # ── 요청/응답 스키마 ───────────────────────────────────────
@@ -42,7 +42,7 @@ class Message(BaseModel):
     content: str
 
 class ChatRequest(BaseModel):
-    model: str = "llama-3.1-8b-instant"
+    model: str = "gemini-2.0-flash"
     api_key: str
     user_input: str
     history: list[Message] = []
@@ -66,7 +66,7 @@ def chat(req: ChatRequest):
     Agent 실행 엔드포인트
 
     Request body:
-        api_key    : Groq API 키 (gsk_...)
+        api_key    : Google AI Studio API 키
         user_input : 사용자 질문
         history    : 이전 대화 [{role, content}, ...]
 

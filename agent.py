@@ -5,7 +5,7 @@ AI Search Agent - 핵심 로직
 - 패턴: ReAct (Observe → Think → Act 루프)
 """
 
-from langchain_groq import ChatGroq
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.tools import DuckDuckGoSearchRun
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain_core.prompts import PromptTemplate
@@ -38,22 +38,22 @@ Question: {input}
 Thought: {agent_scratchpad}"""
 
 
-def create_agent(groq_api_key: str, model: str = "llama-3.1-8b-instant") -> AgentExecutor:
+def create_agent(google_api_key: str, model: str = "gemini-2.0-flash") -> AgentExecutor:
     """
-    Groq API 키로 Agent 생성
+    Gemini API 키로 Agent 생성
 
     Args:
-        groq_api_key: Groq API 키 (console.groq.com에서 무료 발급)
+        google_api_key: Google AI Studio API 키 (aistudio.google.com에서 무료 발급)
 
     Returns:
         LangChain AgentExecutor
     """
-    llm = ChatGroq(
-        model=model,
-        api_key=groq_api_key,
-        temperature=0.3,
-        max_tokens=1024,
-    )
+    llm = ChatGoogleGenerativeAI(
+    model=model,
+    google_api_key=google_api_key,
+    temperature=0.3,
+    max_output_tokens=1024,
+)
 
     tools = [DuckDuckGoSearchRun(name="web_search")]
 
