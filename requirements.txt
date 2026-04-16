@@ -7,4 +7,5 @@ langchain-core>=0.3.58
 duckduckgo-search>=6.0.0
 fastapi>=0.115.0
 uvicorn[standard]>=0.32.0
-python-multipart>=0.0.12langchain-google-genai>=2.0.0
+python-multipart>=0.0.12
+langchain-google-genai>=2.0.0
