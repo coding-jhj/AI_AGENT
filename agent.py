@@ -11,24 +11,29 @@ from langchain.agents import create_react_agent, AgentExecutor
 from langchain_core.prompts import PromptTemplate
 
 
-SYSTEM_PROMPT = """You are a helpful AI Search Agent. You MUST answer in Korean only (한국어만 사용). Never use Chinese or Japanese characters.
-Analyze the user's question and use web search when needed to find up-to-date information.
+SYSTEM_PROMPT = """You are a highly capable AI Search Agent. You MUST answer in Korean only (한국어만 사용).
+
+CRITICAL RULES:
+1. For greetings, simple questions about yourself, math, or general knowledge → answer IMMEDIATELY with "Final Answer" without searching.
+2. ONLY use web_search for: current news, recent events, real-time data, specific facts you are uncertain about.
+3. Search at most ONCE per question. Never repeat searches.
+4. Keep answers concise but complete. For complex topics, give thorough explanations.
+5. NEVER use Chinese or Japanese characters.
 
 You have access to the following tools:
 {tools}
 
 Tool names: {tool_names}
 
-Use the following format STRICTLY:
+Use this format:
 
-Question: the input question you must answer
-Thought: you should always think about what to do
+Question: the input question
+Thought: Do I need to search? Simple/general knowledge → go straight to Final Answer. Current info needed → search once.
 Action: the action to take, should be one of [{tool_names}]
 Action Input: the input to the action
 Observation: the result of the action
-... (this Thought/Action/Action Input/Observation can repeat up to 5 times)
 Thought: I now know the final answer
-Final Answer: MUST be written in Korean only. No Chinese or Japanese characters allowed. Use Korean exclusively.
+Final Answer: 반드시 한국어로만 작성. 명확하고 유용한 답변.
 
 Previous conversation:
 {chat_history}
@@ -48,15 +53,17 @@ def create_agent(google_api_key: str, model: str = "gemini-2.0-flash") -> AgentE
     Returns:
         LangChain AgentExecutor
     """
-    # ✅ 들여쓰기 수정 + max_retries 제거 (버전 호환 오류 방지)
     llm = ChatGoogleGenerativeAI(
         model=model,
         google_api_key=google_api_key,
         temperature=0.3,
-        max_output_tokens=1024,
+        max_output_tokens=2048,
     )
 
-    tools = [DuckDuckGoSearchRun(name="web_search")]
+    tools = [DuckDuckGoSearchRun(
+        name="web_search",
+        description="Search the web for current events, news, real-time data, or specific facts. Use ONLY when necessary."
+    )]
 
     prompt = PromptTemplate.from_template(SYSTEM_PROMPT)
 
@@ -66,18 +73,19 @@ def create_agent(google_api_key: str, model: str = "gemini-2.0-flash") -> AgentE
         agent=agent,
         tools=tools,
         verbose=True,
-        max_iterations=8,
+        max_iterations=3,
+        max_execution_time=30,
         handle_parsing_errors=True,
         return_intermediate_steps=True,
     )
 
 
 def format_history(messages: list) -> str:
-    """대화 기록을 문자열로 변환"""
     if not messages:
         return "없음"
+    recent = messages[-6:]  # 최근 6턴만 유지 (토큰 절약)
     result = []
-    for msg in messages:
+    for msg in recent:
         role = "사용자" if msg["role"] == "user" else "AI"
         result.append(f"{role}: {msg['content']}")
     return "\n".join(result)
