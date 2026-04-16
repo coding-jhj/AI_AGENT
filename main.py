@@ -30,13 +30,10 @@ app.add_middleware(
 )
 
 # ── 인메모리 Agent 캐시 (API 키별로 재사용) ────────────────
-_agent_cache: dict = {}
+
 
 
 def get_or_create_agent(api_key: str):
-    if api_key not in _agent_cache:
-        _agent_cache[api_key] = create_agent(api_key)
-    return _agent_cache[api_key]
 
 
 # ── 요청/응답 스키마 ───────────────────────────────────────

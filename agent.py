@@ -52,7 +52,7 @@ def create_agent(groq_api_key: str) -> AgentExecutor:
         model="llama-3.3-70b-versatile",
         api_key=groq_api_key,
         temperature=0.3,
-        max_tokens=2048,
+        max_tokens=1024,
     )
 
     tools = [DuckDuckGoSearchRun(name="web_search")]
