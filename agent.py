@@ -1,6 +1,6 @@
 """
 AI Search Agent - 핵심 로직
-- LLM: Groq (llama-3.3-70b) - 무료
+- LLM: Google Gemini (langchain-google-genai)
 - 검색: DuckDuckGo - API 키 없이 무료
 - 패턴: ReAct (Observe → Think → Act 루프)
 """
@@ -9,7 +9,6 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.tools import DuckDuckGoSearchRun
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain_core.prompts import PromptTemplate
-from langchain_core.messages import HumanMessage, AIMessage
 
 
 SYSTEM_PROMPT = """You are a helpful AI Search Agent. You MUST answer in Korean only (한국어만 사용). Never use Chinese or Japanese characters.
@@ -44,16 +43,18 @@ def create_agent(google_api_key: str, model: str = "gemini-2.0-flash") -> AgentE
 
     Args:
         google_api_key: Google AI Studio API 키 (aistudio.google.com에서 무료 발급)
+        model: 사용할 모델명
 
     Returns:
         LangChain AgentExecutor
     """
+    # ✅ 들여쓰기 수정 + max_retries 제거 (버전 호환 오류 방지)
     llm = ChatGoogleGenerativeAI(
-    model=model,
-    google_api_key=google_api_key,
-    temperature=0.3,
-    max_output_tokens=1024,
-)
+        model=model,
+        google_api_key=google_api_key,
+        temperature=0.3,
+        max_output_tokens=1024,
+    )
 
     tools = [DuckDuckGoSearchRun(name="web_search")]
 
@@ -65,7 +66,7 @@ def create_agent(google_api_key: str, model: str = "gemini-2.0-flash") -> AgentE
         agent=agent,
         tools=tools,
         verbose=True,
-        max_iterations=8,          # 최대 5번 루프
+        max_iterations=8,
         handle_parsing_errors=True,
         return_intermediate_steps=True,
     )
@@ -94,7 +95,7 @@ def run_agent(agent_executor: AgentExecutor, user_input: str, history: list) -> 
     Returns:
         {
             "answer": "최종 답변",
-            "searched": True/False,  # 웹 검색 사용 여부
+            "searched": True/False,
             "search_query": "검색어" or None
         }
     """
@@ -103,7 +104,6 @@ def run_agent(agent_executor: AgentExecutor, user_input: str, history: list) -> 
         "chat_history": format_history(history),
     })
 
-    # 중간 단계에서 검색 사용 여부 확인
     searched = False
     search_query = None
     for action, observation in result.get("intermediate_steps", []):
