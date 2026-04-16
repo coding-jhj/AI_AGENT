@@ -65,7 +65,7 @@ def create_agent(groq_api_key: str, model: str = "llama-3.1-8b-instant") -> Agen
         agent=agent,
         tools=tools,
         verbose=True,
-        max_iterations=5,          # 최대 5번 루프
+        max_iterations=8,          # 최대 5번 루프
         handle_parsing_errors=True,
         return_intermediate_steps=True,
     )
