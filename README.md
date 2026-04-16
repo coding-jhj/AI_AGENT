@@ -18,7 +18,7 @@ app_port: 7860
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi)](https://fastapi.tiangolo.com)
 [![LangChain](https://img.shields.io/badge/LangChain-0.3-1C3C3C?logo=langchain)](https://langchain.com)
 
-**🚀 [라이브 데모 보기](https://jeonghwanju-ai-search-agent.hf.space)** — Groq 무료 API 키로 바로 체험 가능
+**🚀 [라이브 데모 보기](https://jeonghwanju-ai-search-agent.hf.space)** — Google AI Studio 무료 API 키로 바로 체험 가능
 
 </div>
 
@@ -52,7 +52,7 @@ Agent:  🔍 "AI news today" 검색
 
 | 역할 | 기술 | 비용 |
 |------|------|:----:|
-| LLM | Llama 3.1 8B (Groq) | 무료 |
+| LLM | Gemini 2.0 Flash (Google AI) | 무료 |
 | 웹 검색 | DuckDuckGo | 무료 |
 | Agent 프레임워크 | LangChain ReAct | 무료 |
 | 백엔드 | FastAPI | 무료 |
@@ -90,6 +90,15 @@ uvicorn main:app --reload --port 8000
 
 ---
 
+## API 키 발급 방법
+
+1. [aistudio.google.com](https://aistudio.google.com) 접속
+2. 구글 계정으로 로그인
+3. **Get API Key** → **Create API Key**
+4. 발급된 키(`AIza...`)를 사이트 입력창에 붙여넣기
+
+---
+
 ## API 엔드포인트
 
 | 메서드 | 경로 | 설명 |
@@ -104,7 +113,7 @@ uvicorn main:app --reload --port 8000
 ## 보안 설계
 
 > 🔒 **API 키는 서버에 저장되지 않습니다.**  
-> 사용자가 직접 Groq API 키를 입력하는 방식으로, 키가 서버에 보관되지 않고 요청마다 Groq API로 직접 전달됩니다.  
+> 사용자가 직접 Google AI Studio API 키를 입력하는 방식으로, 키가 서버에 보관되지 않고 요청마다 Google API로 직접 전달됩니다.  
 > 대화가 끝나면 키는 브라우저 메모리에서 사라집니다.
 
 | 항목 | 내용 |
@@ -112,12 +121,12 @@ uvicorn main:app --reload --port 8000
 | API 키 서버 저장 | ❌ 없음 |
 | API 키 DB 기록 | ❌ 없음 |
 | 대화 내용 저장 | ❌ 없음 |
-| Groq 무료 한도 공유 | ❌ 각자 본인 키 사용 |
+| Google 무료 한도 공유 | ❌ 각자 본인 키 사용 |
 
 ---
 
 <div align="center">
 
-Made with LangChain + Groq · 포트폴리오 프로젝트
+Made with LangChain + Google Gemini · 포트폴리오 프로젝트
 
 </div>
