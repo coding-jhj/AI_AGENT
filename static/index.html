@@ -339,7 +339,17 @@
 
   <div class="divider"></div>
 
-  <button class="clear-btn" onclick="clearChat()">🗑️ 대화 초기화</button>
+  <div>
+    <div class="section-label">모델 선택</div>
+    <select id="model-select" style="width:100%;background:#0c0e14;border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--mono);font-size:12px;padding:9px 12px;outline:none;cursor:pointer;">
+      <option value="llama-3.1-8b-instant">⚡ 8B Instant (추천)</option>
+      <option value="llama-3.3-70b-versatile">🧠 70B Versatile (고품질)</option>
+    </select>
+  </div>
+
+  <div class="divider"></div>
+
+    <button class="clear-btn" onclick="clearChat()">🗑️ 대화 초기화</button>
 
   <div class="divider"></div>
 
@@ -388,6 +398,16 @@
 
 <script>
   const API_BASE = window.location.origin; // FastAPI 서버 주소 (같은 서버)
+
+
+  const savedKey = localStorage.getItem('groq_api_key');
+  if (savedKey) { keyInput.value = savedKey; keyInput.dispatchEvent(new Event('input')); }
+  const savedModel = localStorage.getItem('groq_model');
+  if (savedModel) { document.getElementById('model-select').value = savedModel; }
+  keyInput.addEventListener('change', () => { localStorage.setItem('groq_api_key', keyInput.value.trim()); });
+  document.getElementById('model-select').addEventListener('change', () => {
+    localStorage.setItem('groq_model', document.getElementById('model-select').value);
+  });
 
   let history = [];
   let isLoading = false;
@@ -491,7 +511,7 @@
       const res = await fetch(`${API_BASE}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ api_key: apiKey, user_input: input, history: history.slice(0, -1) }),
+        body: JSON.stringify({ api_key: apiKey, user_input: input, history: history.slice(0, -1), model: document.getElementById('model-select').value }),
       });
 
       removeTyping();

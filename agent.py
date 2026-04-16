@@ -38,7 +38,7 @@ Question: {input}
 Thought: {agent_scratchpad}"""
 
 
-def create_agent(groq_api_key: str) -> AgentExecutor:
+def create_agent(groq_api_key: str, model: str = "llama-3.1-8b-instant") -> AgentExecutor:
     """
     Groq API 키로 Agent 생성
 
@@ -49,7 +49,7 @@ def create_agent(groq_api_key: str) -> AgentExecutor:
         LangChain AgentExecutor
     """
     llm = ChatGroq(
-        model="llama-3.3-70b-versatile",
+        model=model,
         api_key=groq_api_key,
         temperature=0.3,
         max_tokens=1024,

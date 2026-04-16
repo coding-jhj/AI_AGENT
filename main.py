@@ -33,8 +33,8 @@ app.add_middleware(
 
 
 
-def get_or_create_agent(api_key: str):
-    return create_agent(api_key)
+def get_or_create_agent(api_key: str, model: str = "llama-3.1-8b-instant"):
+    return create_agent(api_key, model)
 
 # ── 요청/응답 스키마 ───────────────────────────────────────
 class Message(BaseModel):
@@ -42,6 +42,7 @@ class Message(BaseModel):
     content: str
 
 class ChatRequest(BaseModel):
+    model: str = "llama-3.1-8b-instant"
     api_key: str
     user_input: str
     history: list[Message] = []
@@ -80,7 +81,7 @@ def chat(req: ChatRequest):
         raise HTTPException(status_code=400, detail="질문을 입력해주세요.")
 
     try:
-        agent_executor = get_or_create_agent(req.api_key)
+        agent_executor = get_or_create_agent(req.api_key, req.model)
         history = [{"role": m.role, "content": m.content} for m in req.history]
         result = run_agent(agent_executor, req.user_input, history)
         return ChatResponse(**result)
