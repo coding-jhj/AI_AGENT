@@ -34,7 +34,7 @@ app.add_middleware(
 
 
 def get_or_create_agent(api_key: str):
-
+    return create_agent(api_key)
 
 # ── 요청/응답 스키마 ───────────────────────────────────────
 class Message(BaseModel):
