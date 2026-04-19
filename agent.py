@@ -4,14 +4,13 @@ AI Search Agent - 핵심 로직
 - 검색: DuckDuckGo - API 키 없이 무료
 - 패턴: ReAct (Observe → Think → Act 루프)
 """
-
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.tools import DuckDuckGoSearchRun
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain_core.prompts import PromptTemplate
 
-
-SYSTEM_PROMPT = """You are a highly capable AI Search Agent. You MUST answer in Korean only (한국어만 사용).
+SYSTEM_PROMPT = """You are a highly capable AI Search Agent.
+You MUST answer in Korean only (한국어만 사용).
 
 CRITICAL RULES:
 1. For greetings, simple questions about yourself, math, or general knowledge → answer IMMEDIATELY with "Final Answer" without searching.
@@ -48,17 +47,22 @@ def create_agent(google_api_key: str, model: str = "gemini-2.0-flash") -> AgentE
 
     Args:
         google_api_key: Google AI Studio API 키 (aistudio.google.com에서 무료 발급)
-        model: 사용할 모델명
+        model: 사용할 모델명 (gemini-2.0-flash 또는 gemini-2.0-flash-lite)
 
     Returns:
         LangChain AgentExecutor
     """
+    # Gemini 모델만 허용 (Llama 등 다른 모델명 방어)
+    allowed_models = ["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-1.5-flash"]
+    if model not in allowed_models:
+        model = "gemini-2.0-flash"
+
     llm = ChatGoogleGenerativeAI(
-    model=model,
-    google_api_key=google_api_key,
-    temperature=0.3,
-    max_output_tokens=512,  # 2048 → 512
-)
+        model=model,
+        google_api_key=google_api_key,
+        temperature=0.3,
+        max_output_tokens=512,  # 2048 → 512 (토큰 절약, 429 방지)
+    )
 
     tools = [DuckDuckGoSearchRun(
         name="web_search",
@@ -66,24 +70,23 @@ def create_agent(google_api_key: str, model: str = "gemini-2.0-flash") -> AgentE
     )]
 
     prompt = PromptTemplate.from_template(SYSTEM_PROMPT)
-
     agent = create_react_agent(llm, tools, prompt)
 
     return AgentExecutor(
-    agent=agent,
-    tools=tools,
-    verbose=True,
-    max_iterations=2,           # 3 → 2로 줄이기
-    max_execution_time=20,      # 실질적 효과는 없지만 명시
-    handle_parsing_errors=False, # True → False, 에러나면 즉시 중단
-    return_intermediate_steps=True,
-)
+        agent=agent,
+        tools=tools,
+        verbose=True,
+        max_iterations=2,             # 3 → 2 (LLM 호출 횟수 제한)
+        max_execution_time=25,
+        handle_parsing_errors=False,  # True → False (에러 시 즉시 중단, 재호출 방지)
+        return_intermediate_steps=True,
+    )
 
 
 def format_history(messages: list) -> str:
     if not messages:
         return "없음"
-    recent = messages[-6:]  # 최근 6턴만 유지 (토큰 절약)
+    recent = messages[-4:]  # 최근 4턴만 유지 (6 → 4, 토큰 절약)
     result = []
     for msg in recent:
         role = "사용자" if msg["role"] == "user" else "AI"
