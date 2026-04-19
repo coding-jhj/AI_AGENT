@@ -42,17 +42,7 @@ Thought: {agent_scratchpad}"""
 
 
 def create_agent(google_api_key: str, model: str = "gemini-2.0-flash") -> AgentExecutor:
-    """
-    Gemini API 키로 Agent 생성
-
-    Args:
-        google_api_key: Google AI Studio API 키 (aistudio.google.com에서 무료 발급)
-        model: 사용할 모델명 (gemini-2.0-flash 또는 gemini-2.0-flash-lite)
-
-    Returns:
-        LangChain AgentExecutor
-    """
-    # Gemini 모델만 허용 (Llama 등 다른 모델명 방어)
+    # Gemini 모델만 허용
     allowed_models = ["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-1.5-flash"]
     if model not in allowed_models:
         model = "gemini-2.0-flash"
@@ -61,7 +51,9 @@ def create_agent(google_api_key: str, model: str = "gemini-2.0-flash") -> AgentE
         model=model,
         google_api_key=google_api_key,
         temperature=0.3,
-        max_output_tokens=512,  # 2048 → 512 (토큰 절약, 429 방지)
+        max_output_tokens=512,
+        max_retries=0,       # ← 핵심: LangChain 자동 재시도 완전 차단
+        timeout=20,          # ← 20초 안에 응답 없으면 즉시 포기
     )
 
     tools = [DuckDuckGoSearchRun(
@@ -76,9 +68,9 @@ def create_agent(google_api_key: str, model: str = "gemini-2.0-flash") -> AgentE
         agent=agent,
         tools=tools,
         verbose=True,
-        max_iterations=2,             # 3 → 2 (LLM 호출 횟수 제한)
+        max_iterations=2,
         max_execution_time=25,
-        handle_parsing_errors=False,  # True → False (에러 시 즉시 중단, 재호출 방지)
+        handle_parsing_errors=False,
         return_intermediate_steps=True,
     )
 
@@ -86,7 +78,7 @@ def create_agent(google_api_key: str, model: str = "gemini-2.0-flash") -> AgentE
 def format_history(messages: list) -> str:
     if not messages:
         return "없음"
-    recent = messages[-4:]  # 최근 4턴만 유지 (6 → 4, 토큰 절약)
+    recent = messages[-4:]
     result = []
     for msg in recent:
         role = "사용자" if msg["role"] == "user" else "AI"
@@ -95,21 +87,6 @@ def format_history(messages: list) -> str:
 
 
 def run_agent(agent_executor: AgentExecutor, user_input: str, history: list) -> dict:
-    """
-    Agent 실행
-
-    Args:
-        agent_executor: create_agent()로 생성한 executor
-        user_input: 사용자 질문
-        history: 이전 대화 기록 [{"role": "user"/"assistant", "content": "..."}]
-
-    Returns:
-        {
-            "answer": "최종 답변",
-            "searched": True/False,
-            "search_query": "검색어" or None
-        }
-    """
     result = agent_executor.invoke({
         "input": user_input,
         "chat_history": format_history(history),
