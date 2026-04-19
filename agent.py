@@ -54,11 +54,11 @@ def create_agent(google_api_key: str, model: str = "gemini-2.0-flash") -> AgentE
         LangChain AgentExecutor
     """
     llm = ChatGoogleGenerativeAI(
-        model=model,
-        google_api_key=google_api_key,
-        temperature=0.3,
-        max_output_tokens=2048,
-    )
+    model=model,
+    google_api_key=google_api_key,
+    temperature=0.3,
+    max_output_tokens=512,  # 2048 → 512
+)
 
     tools = [DuckDuckGoSearchRun(
         name="web_search",
@@ -70,14 +70,14 @@ def create_agent(google_api_key: str, model: str = "gemini-2.0-flash") -> AgentE
     agent = create_react_agent(llm, tools, prompt)
 
     return AgentExecutor(
-        agent=agent,
-        tools=tools,
-        verbose=True,
-        max_iterations=3,
-        max_execution_time=30,
-        handle_parsing_errors=True,
-        return_intermediate_steps=True,
-    )
+    agent=agent,
+    tools=tools,
+    verbose=True,
+    max_iterations=2,           # 3 → 2로 줄이기
+    max_execution_time=20,      # 실질적 효과는 없지만 명시
+    handle_parsing_errors=False, # True → False, 에러나면 즉시 중단
+    return_intermediate_steps=True,
+)
 
 
 def format_history(messages: list) -> str:
