@@ -28,7 +28,7 @@ app.add_middleware(
 )
 
 
-def get_or_create_agent(api_key: str, model: str = "gemini-2.0-flash"):
+def get_or_create_agent(api_key: str, model: str = "gemini-3.5-flash"):
     return create_agent(api_key, model)
 
 
@@ -37,7 +37,7 @@ class Message(BaseModel):
     content: str
 
 class ChatRequest(BaseModel):
-    model: str = "gemini-2.0-flash"
+    model: str = "gemini-3.5-flash"
     api_key: str
     user_input: str
     history: list[Message] = []

@@ -71,7 +71,7 @@ flowchart LR
 
 | 역할 | 기술 | 비용 |
 |------|------|:----:|
-| LLM | Gemini 2.0 Flash (Google AI) | 무료 |
+| LLM | Gemini 3.5 Flash (Google AI) | 무료 |
 | 웹 검색 | DuckDuckGo | 무료 |
 | Agent 프레임워크 | LangChain ReAct | 무료 |
 | 백엔드 | FastAPI | 무료 |

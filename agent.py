@@ -41,11 +41,11 @@ Question: {input}
 Thought: {agent_scratchpad}"""
 
 
-def create_agent(google_api_key: str, model: str = "gemini-2.0-flash") -> AgentExecutor:
+def create_agent(google_api_key: str, model: str = "gemini-3.5-flash") -> AgentExecutor:
     # Gemini 모델만 허용
-    allowed_models = ["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-1.5-flash"]
+    allowed_models = ["gemini-3.5-flash", "gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-1.5-flash"]
     if model not in allowed_models:
-        model = "gemini-2.0-flash"
+        model = "gemini-3.5-flash"
 
     llm = ChatGoogleGenerativeAI(
         model=model,

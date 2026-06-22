@@ -352,7 +352,8 @@
   <div>
     <div class="section-label">모델 선택</div>
     <select id="model-select" class="model-select">
-      <option value="gemini-2.0-flash">⚡ Gemini 2.0 Flash</option>
+      <option value="gemini-3.5-flash">⚡ Gemini 3.5 Flash</option>
+      <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
       <option value="gemini-2.0-flash-lite">🪶 Gemini 2.0 Flash Lite</option>
     </select>
   </div>
@@ -366,7 +367,7 @@
   <div>
     <div class="section-label">Tech Stack</div>
     <ul class="stack-list">
-      <li><span class="tag tag-llm">LLM</span> Gemini 2.0 Flash</li>
+      <li><span class="tag tag-llm">LLM</span> Gemini 3.5 Flash</li>
       <li><span class="tag tag-search">검색</span> DuckDuckGo</li>
       <li><span class="tag tag-agent">Agent</span> LangChain ReAct</li>
       <li><span class="tag tag-api">API</span> FastAPI</li>
@@ -444,8 +445,8 @@
     if ([...sel.options].some(o => o.value === savedModel)) {
       sel.value = savedModel;
     } else {
-      sel.value = 'gemini-2.0-flash';
-      localStorage.setItem('google_model', 'gemini-2.0-flash');
+      sel.value = 'gemini-3.5-flash';
+      localStorage.setItem('google_model', 'gemini-3.5-flash');
     }
   }
 
