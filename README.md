@@ -20,6 +20,10 @@ app_port: 7860
 
 **🚀 [라이브 데모 보기](https://jeonghwanju-ai-search-agent.hf.space)** — Google AI Studio 무료 API 키로 바로 체험 가능
 
+<br/>
+
+<img src="docs/demo.png" alt="AI Search Agent 데모" width="800"/>
+
 </div>
 
 ---
