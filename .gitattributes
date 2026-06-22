@@ -1,0 +1,3 @@
+# 복습 노트/문서는 documentation, 내장 프론트엔드 HTML은 vendored → Python 부각
+*.md linguist-documentation
+static/** linguist-vendored
