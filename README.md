@@ -44,6 +44,21 @@ Agent:  🔍 "AI news today" 검색
 질문 입력 → [Observe] 분석 → [Think] 검색 필요? → [Act] 웹 검색 → [Observe] 결과 충분? → 최종 답변
 ```
 
+```mermaid
+flowchart LR
+    Q[질문 입력] --> O1["Observe<br/>질문 분석"]
+    O1 --> T{"Think<br/>검색 필요?"}
+    T -->|No| ANS[최종 답변]
+    T -->|Yes| A["Act<br/>웹 검색 · DuckDuckGo"]
+    A --> O2{"Observe<br/>결과 충분?"}
+    O2 -->|No| T
+    O2 -->|Yes| ANS
+
+    style Q fill:#6366f1,color:#fff,stroke:none
+    style A fill:#FF6F00,color:#fff,stroke:none
+    style ANS fill:#22c55e,color:#fff,stroke:none
+```
+
 일반 챗봇은 입력 → 출력 한 번으로 끝나지만, AI Agent는 이 루프를 **필요한 만큼 반복**합니다.
 
 ---
